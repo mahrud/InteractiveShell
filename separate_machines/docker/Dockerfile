@@ -16,7 +16,7 @@ RUN apt-key add Macaulay2-key
 RUN apt-get update && apt-get install -y macaulay2
 
 # M2 userland
-RUN sudo apt-get install -y graphviz
+RUN sudo apt-get update && apt-get install -yq graphviz flex libc6-dev libcdd-dev libgc-dev libgdbm-dev libglpk-dev liblapack-dev libmpfr-dev libncurses-dev libncurses5-dev libntl-dev libpari-dev libreadline-dev libxml2-dev liblzma-dev libz-dev zlib1g-dev libtool 
 RUN useradd -m -d /home/m2user m2user
 RUN mkdir /home/m2user/.ssh
 COPY docker_key.pub /home/m2user/.ssh/authorized_keys
@@ -40,10 +40,10 @@ RUN sed -i 's/m2user:!/m2user:*/' /etc/shadow
 # RUN cd BertiniSource_v1.5; ./configure; /usr/bin/make; sudo /usr/bin/make install
 
 # From Mikes dockerfile.
+ENV PHCV_VERSION 24
 RUN mkdir /custom
-ENV PHC_VERSION 24
-RUN (cd /custom; wget http://www.math.uic.edu/~jan/x86_64phcv${PHC_VERSION}p.tar.gz)
-RUN (cd /custom; tar zxf x86_64phcv23p.tar.gz; mv phc /usr/bin; rm x86_64phcv${PHC_VERSION}p.tar.gz)
+RUN (cd /custom; wget http://www.math.uic.edu/~jan/x86_64phcv${PHCV_VERSION}p.tar.gz)
+RUN (cd /custom; tar zxf x86_64phcv${PHCV_VERSION}p.tar.gz; mv phc /usr/bin; rm x86_64phcv${PHCV_VERSION}p.tar.gz)
 RUN chown -R m2user:m2user /custom
 RUN chmod -R 775 /custom
 # This is the only way extracting Bertini gives the right permissions.
