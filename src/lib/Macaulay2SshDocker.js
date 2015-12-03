@@ -10,8 +10,8 @@ GLOBAL.OPTIONS = require('./default.js').get_config({
 	    memory: 512
 	},
         hostConfig: {
-            minContainerAge: 10,
-            maxContainerNumber: 40,
+            minContainerAge: 30,
+            maxContainerNumber: 20,
 	}
 });
 
