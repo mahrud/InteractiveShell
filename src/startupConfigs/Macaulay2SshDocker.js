@@ -6,7 +6,15 @@ GLOBAL.OPTIONS = require('./default.js').getConfig({
     'export PATH=/usr/bin:$PATH; ' +
     'M2 --print-width 100',
     CONTAINERS: '../lib/sshDockerContainers.js'
-  }
+  },
+	perContainerResources: {
+	    cpuShares: 2,
+	    memory: 512
+	},
+        hostConfig: {
+            minContainerAge: 30,
+            maxContainerNumber: 20,
+	}
 });
 
 var Macaulay2Server = require('../lib/index.js').mathServer();
