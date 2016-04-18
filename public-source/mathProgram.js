@@ -31,9 +31,10 @@ trym2.CssClasses = {
     titleSymbolActive: "expand_more",
     titleSymbolInactive: "expand_less",
     title: "mdl-button mdl-js-button mdl-button--raised mdl-list__item",
-    titleHover: "mdl-button--colored",
-    titleToggleClass: "mdl-button--accent",
+    titleHover: "mdl-button--accent",
+    titleToggleClass: "",
     content: "mdl-list__item-text-body mdl-list__item",
+    innerListItem: "unstyled",
     titleHref: "menuTitle mdl-button mdl-js-button mdl-button-raised",
     submenuHref: "submenuItem"
   }
@@ -70,7 +71,7 @@ trym2.appendTutorialToAccordion = function(tmptitle, lessons, index) {
   var content = '<ul>';
   for (var j = 0; j < lessons.length; j++) {
     content = content +
-        '<li><a href="#" class="' + trym2.CssClasses.accordion.submenuHref + '" tutorialid=' + index +
+        '<li class="' + trym2.CssClasses.accordion.innerListItem + '"><a href="#" class="' + trym2.CssClasses.accordion.submenuHref + '" tutorialid=' + index +
         ' lessonid=' + j + '>  ' + lessons[j].title + '</a></li>';
   }
   content += '</ul>';
@@ -125,12 +126,12 @@ trym2.addExpandLoadTutorialInstructionsButton = function() {
 
 trym2.scrollDownUntilTutorialVisible = function() {
   var y = $(this).position().top;
-  var height = parseInt($("#scroll-tab-1").css('height'), 10);
+  var height = parseInt($("#home").css('height'), 10);
   var totalHeight = parseInt($(this).css('height'), 10) + 50;
   if (height - y < totalHeight) {
     var scroll = totalHeight - height + y;
-    $("#scroll-tab-1").animate({
-      scrollTop: ($("#scroll-tab-1").scrollTop() + scroll)
+    $("#home").animate({
+      scrollTop: ($("#home").scrollTop() + scroll)
     }, 400);
   }
 };
@@ -184,7 +185,7 @@ trym2.showLesson = function(e) {
   // console.log("You clicked a submenuItem: " + $(this).html());
   trym2.loadLesson(tutorialIdNr, lessonIdNr);
 
-  $(".mdl-layout__tab:eq(1) span").click();
+  document.getElementById("lessonTabTitle").click();
   return false;
 };
 
@@ -207,16 +208,16 @@ trym2.loadLesson = function(tutorialid, lessonid) {
     console.log("Lesson changed");
     console.log(this.tutorials[this.tutorialNr].title);
     var title = this.tutorials[this.tutorialNr].title.text();
-    $("#lesson").html(lessonContent).prepend("<h3>" + title + "</h3>").show();
+    $("#lesson").html(lessonContent).prepend("<h3>" + title + "</h3>");
     $("#lesson").scrollTop(0); // scroll to the top of a new lesson
     MathJax.Hub.Queue(["Typeset", MathJax.Hub, "#lesson"]);
+    // document.getElementById("lessonTabTitle").click();
   }
 };
 
 trym2.switchLesson = function(incr) {
-  // console.log("Current lessonNr " + trym2.lessonNr);
+  console.log("Current lessonNr " + trym2.lessonNr);
   this.loadLesson(this.tutorialNr, this.lessonNr + incr);
-  $(".mdl-layout__tab:eq(1) span").click();
 };
 
 trym2.inspect = function(obj) {
@@ -267,11 +268,11 @@ var saveInteractions = function() {
   var output = $("#M2Out");
   var dialog = document.querySelector('#saveDialog');
   var inputLink = 'data:application/octet-stream,' + encodeURIComponent(input.val());
-  var inputParagraph = document.querySelector("#inputContent");
+  var inputParagraph = document.getElementById("inputContent");
   inputParagraph.setAttribute('href', inputLink);
   inputParagraph.setAttribute('download', 'input.txt');
   var outputLink = 'data:application/octet-stream,' + encodeURIComponent(output.val());
-  var outputParagraph = document.querySelector("#outputContent");
+  var outputParagraph = document.getElementById("outputContent");
   outputParagraph.setAttribute('href', outputLink);
   outputParagraph.setAttribute('download', 'output.txt');
   if (!dialog.showModal) {
@@ -311,20 +312,27 @@ trym2.insertDeleteButtonAtLastTutorial = tf.insertDeleteButtonAtLastTutorial;
 trym2.importTutorials = tf.importTutorials;
 
 var attachMinMaxBtnActions = function() {
-  document.querySelector("#maximizeOutput").addEventListener("click", function() {
-    var dialog = document.querySelector("#fullScreenOutput");
+  var maximize = document.getElementById("maximizeOutput");
+  var downsize = document.getElementById("downsizeOutput");
+  var zoomBtns = document.getElementById("M2OutZoomBtns");
+  maximize.addEventListener("click", function() {
+    var dialog = document.getElementById("fullScreenOutput");
+    var maxCtrl = document.getElementById("M2OutCtrlBtnsMax");
     if (!dialog.showModal) {
       dialogPolyfill.registerDialog(dialog);
     }
-    var output = document.querySelector("#M2Out");
+    var output = document.getElementById("M2Out");
     dialog.appendChild(output);
+    maxCtrl.insertBefore(zoomBtns, downsize);
     dialog.showModal();
   });
-  document.querySelector("#downsizeOutput").addEventListener("click", function() {
-    var dialog = document.querySelector("#fullScreenOutput");
-    var oldPosition = document.querySelector("#right-half");
-    var output = document.querySelector("#M2Out");
+  downsize.addEventListener("click", function() {
+    var dialog = document.getElementById("fullScreenOutput");
+    var oldPosition = document.getElementById("right-half");
+    var output = document.getElementById("M2Out");
+    var ctrl = document.getElementById("M2OutCtrlBtns");
     oldPosition.appendChild(output);
+    ctrl.insertBefore(zoomBtns, maximize);
     dialog.close();
   });
 };
@@ -332,12 +340,10 @@ var attachMinMaxBtnActions = function() {
 var attachTutorialNavBtnActions = function() {
   $("#previousBtn").click(function() {
     trym2.switchLesson(-1);
-    $(this).removeClass("ui-state-focus");
   });
 
   $("#nextBtn").click(function() {
     trym2.switchLesson(1);
-    $(this).removeClass("ui-state-focus");
   });
 };
 
@@ -350,16 +356,13 @@ var attachCtrlBtnActions = function() {
   $("#interruptBtn").click(function() {
     trym2.postMessage(ctrlc, true);
   });
-  $("#inputBtn").click(function() {
-    $(".mdl-layout__tab:eq(2) span").click();
-  });
   $("#saveBtn").click(saveInteractions);
 };
 
 trym2.populateTutorialElement = tf.populateTutorialElement;
 
 var showUploadSuccessDialog = function(event) {
-  var dialog = document.querySelector("#uploadSuccessDialog");
+  var dialog = document.getElementById("uploadSuccessDialog");
   if (!dialog.showModal) {
     dialogPolyfill.registerDialog(dialog);
   }
@@ -368,33 +371,48 @@ var showUploadSuccessDialog = function(event) {
   var filename = event.file.name;
   console.log("File uploaded successfully!" + filename);
   var successSentence = filename +
-        " has been uploaded and you can use it by loading it into your " +
-        mathProgramName + " session (use the input terminal).";
-  document.querySelector("#uploadSuccessDialogContent").innerText = successSentence;
+      " has been uploaded and you can use it by loading it into your " +
+      mathProgramName + " session (use the input terminal).";
+  document.getElementById("uploadSuccessDialogContent").innerText = successSentence;
   dialog.showModal();
 };
 
 var showImageDialog = function(imageUrl) {
   if (imageUrl) {
-    var dialog = document.querySelector("#showImageDialog");
+    var dialog = document.getElementById("showImageDialog");
     if (!dialog.showModal) {
       dialogPolyfill.registerDialog(dialog);
     }
     console.log("We received an image: " + imageUrl);
-    var a = document.querySelector("#showImageDialogBtn");
+    var a = document.getElementById("showImageDialogBtn");
     a.setAttribute("href", "#");
     a.innerText = imageUrl.split('/').pop();
     a.addEventListener("click", function() {
       window.open(imageUrl, '_blank',
-                'height=200,width=200,toolbar=0,location=0,menubar=0');
+          'height=200,width=200,toolbar=0,location=0,menubar=0');
       dialog.close();
     });
     dialog.showModal();
   }
 };
 
+var attachCloseDialogBtns = function() {
+  document.getElementById("saveDialogClose").addEventListener('click', function() {
+    document.getElementById("saveDialog").close();
+  });
+  document.getElementById("uploadSuccessDialogClose").addEventListener('click', function() {
+    document.getElementById("uploadSuccessDialog").close();
+  });
+  document.getElementById("showImageDialogClose").addEventListener('click', function() {
+    document.getElementById("showImageDialog").close();
+  });
+};
+
 $(document).ready(function() {
   trym2.getSelected = require('get-selected-text');
+
+  var zoom = require('../src/frontend/zooming');
+  zoom.attachZoomButtons("M2Out", "M2OutZoomIn", "M2OutResetZoom", "M2OutZoomOut");
 
   trym2.socket = io();
 
@@ -407,18 +425,7 @@ $(document).ready(function() {
   attachTutorialNavBtnActions();
   attachMinMaxBtnActions();
   attachCtrlBtnActions();
-
-  document.querySelector("#saveDialogClose").addEventListener('click', function() {
-    document.querySelector("#saveDialog").close();
-  });
-
-  document.querySelector("#uploadSuccessDialogClose").addEventListener('click', function() {
-    document.querySelector("#uploadSuccessDialog").close();
-  });
-
-  document.querySelector("#showImageDialogClose").addEventListener('click', function() {
-    document.querySelector("#showImageDialog").close();
-  });
+  attachCloseDialogBtns();
 
   trym2.socket.on('serverDisconnect', function(msg) {
     console.log("We got disconnected. " + msg);
@@ -481,16 +488,6 @@ $(document).ready(function() {
   });
 
   $("#uptutorial").on('change', trym2.uploadTutorial);
-
-  $("#tutorialBtn").click(function() {
-    trym2.loadLesson(trym2.tutorialNr, trym2.lessonNr);
-    $(".mdl-layout__tab:eq(1) span").click();
-  });
-
-  $("#homeBtn").click(function() {
-    $(".mdl-layout__tab:eq(0) span").click();
-  });
-
   $(document).on("click", ".submenuItem", trym2.showLesson);
 
   var codeClickAction = function() {
@@ -505,7 +502,24 @@ $(document).ready(function() {
   };
 
   $(document).on("click", "code", codeClickAction);
-  $(document).on("click", "code2", codeClickAction);
+  $(document).on("click", "codeblock", codeClickAction);
+
+  $(document).on("click", ".tabPanelActivator", function(event) {
+    var panelId = $(this).attr('href');
+    // show tab panel
+    document.getElementById(panelId).click();
+    // close drawer menu
+    document.body.querySelector('.mdl-layout__obfuscator.is-visible').click();
+    // do not follow link
+    event.preventDefault();
+  });
+
+  $(document).on("click", "#about", function(event) {
+    document.getElementById("helpTitle").click();
+    // show tab panel
+    // do not follow link
+    event.preventDefault();
+  });
 
   trym2.importTutorials();
 });

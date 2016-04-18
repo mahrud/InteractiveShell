@@ -5,20 +5,25 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet"
-          href="https://code.getmdl.io/1.1.3/material.indigo-blue.min.css"/>
+          href="https://code.getmdl.io/1.1.3/material.indigo-deep_orange.min.css"/>
     <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
     <link rel="stylesheet" type="text/css" href="dialog-polyfill.css"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Mono'
+          rel='stylesheet' type='text/css'>
 
     <link rel="stylesheet" href="mathProgram.css" type="text/css"
           media="screen">
-    <link rel="stylesheet"
-          href="jquery-ui-1.10.2.custom/css/cupertino/jquery-ui-1.10.2.custom.css"
-          type="text/css"
+
+    <!-- jquery -->
+    <script type="text/javascript"
+            src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+    <!-- jQuery UI for effect highlight on <code> -->
+    <link rel="stylesheet" href="jquery-ui.min.css" type="text/css"
           media="screen">
     <script type="text/javascript"
-            src="jquery-ui-1.10.2.custom/js/jquery-1.9.1.js"></script>
-    <script type="text/javascript"
-            src="jquery-ui-1.10.2.custom/js/jquery-ui-1.10.2.custom.min.js"></script>
+            src="jquery-ui.min.js"></script>
+
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
       MathJax.Hub.Config({
@@ -69,7 +74,9 @@
 <body>
 
 <dialog id="fullScreenOutput" class="">
-    <i id="downsizeOutput" class="material-icons icon-with-action">fullscreen_exit</i>
+    <div id="M2OutCtrlBtnsMax">
+        <i id="downsizeOutput" class="material-icons icon-with-action">fullscreen_exit</i>
+    </div>
 </dialog>
 
 <dialog id="saveDialog" class="mdl-dialog">
@@ -80,7 +87,7 @@
     <div class="mdl-dialog__content">
         <p>
             <a id="inputContent"
-               class="sdbutton mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+               class="saveDialogButton mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                href="">
                 <i class="material-icons">file_download</i>
                 Content of input window
@@ -88,7 +95,7 @@
         </p>
         <p>
             <a id="outputContent"
-               class="sdbutton mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+               class="saveDialogButton mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                href="">
                 <i class="material-icons">file_download</i>
                 Content of output window
@@ -112,107 +119,204 @@
     </h4>
     <div class="mdl-dialog__content" id="showImageDialogContent">
         <a id="showImageDialogBtn"
-           class="sdbutton mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"></a>
+           class="saveDialogButton mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"></a>
     </div>
 </dialog>
 
-<!--[if IE]>
-<p> Internet Explorer is currently not supported. Please use a different
-    browser. </p>
-<![endif]-->
-
-<!-- Always shows a header, even in smaller screens. -->
-<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--no-desktop-drawer-button">
     <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
             <!-- Title -->
             <span class="mdl-layout-title">Macaulay2</span>
-            <!-- Add spacer, to align navigation to the right -->
             <div class="mdl-layout-spacer"></div>
-            <!-- Navigation. We hide it in small screens. -->
-            <nav class="mdl-navigation">
-                <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-                   id="resetBtn">Reset</a>
-                <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent"
-                   id="interruptBtn">Interrupt</a>
-                <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent"
-                   id="saveBtn">Save</a>
-                <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent"
-                   id="uploadBtn">Upload file</a>
+            <nav class="mdl-navigation ">
+                <div id="resetBtn">
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent mdl-layout--large-screen-only">
+                        Reset
+                    </button>
+                    <button class="mdl-button mdl-js-button mdl-button--icon  mdl-layout--small-screen-only">
+                        <i class="material-icons">replay</i>
+                    </button>
+                </div>
+                <div class="mdl-tooltip" for="resetBtn">
+                    Restart M2
+                </div>
+                <div id="interruptBtn">
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-layout--large-screen-only">
+                        Interrupt
+                    </button>
+                    <button class="mdl-button mdl-js-button mdl-button--icon  mdl-layout--small-screen-only">
+                        <i class="material-icons">pause</i>
+                    </button>
+                </div>
+                <div class="mdl-tooltip" for="interruptBtn">
+                    Send Ctrl-c to M2
+                </div>
+                <div id="saveBtn">
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-layout--large-screen-only">
+                        Save
+                    </button>
+                    <button class="mdl-button mdl-js-button mdl-button--icon  mdl-layout--small-screen-only">
+                        <i class="material-icons">file_download</i>
+                    </button>
+                </div>
+                <div id="uploadBtn">
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-layout--large-screen-only">
+                        Upload file
+                    </button>
+                    <button class="mdl-button mdl-js-button mdl-button--icon mdl-layout--small-screen-only">
+                        <i class="material-icons">file_upload</i>
+                    </button>
+                </div>
+
             </nav>
+
         </div>
-        <!-- Tabs -->
-        <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-            <a href="#scroll-tab-1" class="mdl-layout__tab is-active">Home</a>
-            <a href="#scroll-tab-2" class="mdl-layout__tab">Tutorial</a>
-            <a href="#scroll-tab-3" class="mdl-layout__tab">Input</a>
-        </div>
+
     </header>
     <div class="mdl-layout__drawer">
         <span class="mdl-layout-title">Macaulay2</span>
         <nav class="mdl-navigation">
-            <a class="mdl-navigation__link" href="">Home</a>
-            <a class="mdl-navigation__link" href="">Tutorial</a>
-            <a class="mdl-navigation__link" href="">Input</a>
-            <a class="mdl-navigation__link" href="">Help</a>
+            <a class="mdl-navigation__link tabPanelActivator" href="homeTitle">Home</a>
+            <a class="mdl-navigation__link tabPanelActivator"
+               href="lessonTabTitle">Tutorial</a>
+            <a class="mdl-navigation__link tabPanelActivator"
+               href="editorTitle">Editor</a>
+            <a class="mdl-navigation__link tabPanelActivator" href="helpTitle">About</a>
         </nav>
     </div>
+
     <main class="mdl-layout__content" id="content">
         <div class="mdl-grid">
-            <div class="mdl-cell mdl-cell--6-col" id="left-half">
+            <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone"
+                 id="left-half">
 
-                <section class="mdl-layout__tab-panel is-active"
-                         id="scroll-tab-1">
-                    <div class="page-content" id="home">
-                        <img class="image-text-wrap" src="frontPageImage.jpg"/>
+                <div class="mdl-tabs mdl-js-tabs ">
+                    <div class="mdl-tabs__tab-bar mdl mdl-layout--large-screen-only">
+                        <a href="#home" id="homeTitle" class="mdl-tabs__tab">Home</a>
+                        <a href="#lessonTab" id="lessonTabTitle"
+                           class="mdl-tabs__tab">Tutorials</a>
+                        <a href="#editor" id="editorTitle"
+                           class="mdl-tabs__tab">Editor</a>
+                        <a href="#help" id="helpTitle"
+                           class="mdl-tabs__tab">About</a>
+
+                    </div>
+                    <div class="mdl-tabs__panel mdl-layout--fixed-header is-active"
+                         id="home">
+                        <img class="image-text-wrap mdl-layout--large-screen-only"
+                             src="frontPageImage.jpg"/>
+                        <img class="image-text-wrap mdl-layout--small-screen-only small-image"
+                             src="frontPageImage.jpg"/>
+
 
                         <h3>Welcome to Macaulay2</h3>
 
-                        <p>This web site allows you to try, learn, and use
-                            Macaulay2, without the need to
-                            install it.
-                            Get started by selecting a tutorial below. To learn
-                            how to use this site effectively,
+                        <p>Learn and use
+                            Macaulay2.
+                            Get started by selecting a tutorial below. To use
+                            this site effectively,
                             try the <b>Welcome</b> tutorial. Have fun!
                         </p>
 
                         <p><a href='http://macaulay2.com' target='_blank'>Macaulay2</a>
                             is an open source software
-                            system devoted to supporting research in algebraic
-                            geometry and commutative
-                            algebra, and related field in mathematics or
+                            system devoted to supporting research in <b>algebraic
+                                geometry and commutative
+                                algebra</b>, and related field in mathematics or
                             applications. </p>
                     </div>
-                </section>
+                    <div class="mdl-tabs__panel" id="lessonTab">
+                        <div id="lesson">
 
-                <section class="mdl-layout__tab-panel" id="scroll-tab-2">
-                    <div class="page-content" id="lesson">
-                    </div>
-                    <div class="buttonset">
-                        <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colores"
-                                id="previousBtn"><i class="material-icons">chevron_left</i>
-                        </button>
-                        <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colores"
-                                id="nextBtn"><i class="material-icons">chevron_right</i>
-                        </button>
-                    </div>
-                </section>
+                        </div>
+                        <div>
+                            <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored navigationButton"
+                                    id="nextBtn"><i class="material-icons">chevron_right</i>
+                                <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored navigationButton"
+                                        id="previousBtn"><i
+                                        class="material-icons">chevron_left</i>
+                                </button>
 
-                <section class="mdl-layout__tab-panel" id="scroll-tab-3">
-                    <div class="page-content" id="editor">
+                            </button>
+                        </div>
+
+                    </div>
+                    <div class="mdl-tabs__panel" id="editor">
                         <button type="button"
                                 class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                                 id="sendBtn">Evaluate
-                        </button>
+                        </button> 
                   <textarea id="M2In" wrap='off' autocorrect="off"
                             spellcheck="false" autocapitalize="off">
                   </textarea>
                     </div>
-                </section>
+                    <div class="mdl-tabs__panel" id="help">
+                        <h4>Questions?</h4>
+                        <p>Email the M2 group
+                            if you have questions about Macaulay2 and related
+                            mathematics:
+                            <a
+                                    href='mailto:macaulay2@googlegroups.com'><br>macaulay2@googlegroups.com</a>.<br>
+                        </p>
+                        <p>Email the TryM2 group
+                            with any questions or suggestions for this website:
+                            <a
+                                    href='mailto:trym2@googlegroups.com'><br>trym2@googlegroups.com</a>.<br>
+                        </p>
+
+
+                        <h4>Contributing</h4>
+
+                        <p>
+                            This is an open source project, hosted on <a
+                                href="http://github.com/fhinkel/InteractiveShell"
+                                target="_blank">GitHub</a>.
+                        </p>
+                        <p>
+                            If you have tutorials that you would like to
+                            contribute, please contact us.
+                        </p>
+
+                        <h4>Funding</h4>
+                        <p>
+                            Funding provided by
+                            the NSF, <a
+                                href="http://www.math.uiuc.edu/Macaulay2/Funding/"
+                                target='_blank'>see here</a> and through
+                            Award 0635561, and DFG grant <a
+                                href="http://www.computeralgebra.de">SPP1489</a>.
+                            <br> <br>
+                        </p>
+
+                        <h4>Authors</h4>
+                        <p>
+                            Made with <i class="material-icons">favorite</i>
+                            by <a href="http://twitter.com/fhinkel">Franziska
+                            Hinkelmann</a>, <a
+                                href="http://page.mi.fu-berlin.de/lkastner/">Lars
+                            Kastner</a>,
+                            <a href="http://www.math.cornell.edu/~mike/">Mike
+                                Stillman</a>.
+                        </p>
+                    </div>
+                </div>
             </div>
 
-            <div class="mdl-cell mdl-cell--6-col" id="right-half">
-                <i id="maximizeOutput" class="material-icons icon-with-action">fullscreen</i>
+            <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone"
+                 id="right-half">
+                <div id="M2OutCtrlBtns">
+                    <div id="M2OutZoomBtns">
+                        <i id="M2OutZoomIn"
+                           class="material-icons icon-with-action">zoom_in</i>
+                        <i id="M2OutResetZoom"
+                           class="material-icons icon-with-action">find_replace</i>
+                        <i id="M2OutZoomOut"
+                           class="material-icons icon-with-action">zoom_out</i>
+                    </div>
+                    <i id="maximizeOutput"
+                       class="material-icons icon-with-action">fullscreen</i>
+                </div>
             <textarea id="M2Out" wrap='off' autocorrect="off" spellcheck="false"
                       autocapitalize="off">
             </textarea>
@@ -221,17 +325,11 @@
     </main>
 
 
-    <footer class="mdl-mini-footer">
+    <footer class="mdl-mini-footer mdl-layout--large-screen-only">
         <div class="mdl-mini-footer__left-section">
-
-            <div class="mdl-logo">About</div>
-            <ul class="mdl-mini-footer__link-list">
-                <!--li><a href="#">About</a></li>
-                <li><a href="#">Funding</a></li>
-                <!-- provided by the NSF (
-                    <a href="http://www.math.uiuc.edu/Macaulay2/Funding/" target='_blank'>see here</a>
-                    and through Award 0635561).</a>-->
-            </ul>
+            <div class="mdl-logo">
+                <a id="about">About</a>
+            </div>
         </div>
 
         <div class="mdl-mini-footer__right-section">

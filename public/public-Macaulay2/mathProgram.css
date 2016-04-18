@@ -5,11 +5,8 @@ body {
     background: linear-gradient(to right, whitesmoke, lightsteelblue); /* Standard syntax */
 }
 
-
 .mdl-grid {
-    height: 100%;
     position: absolute;
-    width:100%;
 
     /* Firefox */
     width: -moz-calc(100% - 16px);
@@ -25,8 +22,8 @@ body {
 
 }
 
-#left-half {
-    height: 100%;
+#left-half, #right-half {
+    position: relative;
     /* grid has margin 8px, which is not subtracked by
     box-sizing, so we subtract it manually */
     /* Firefox */
@@ -35,58 +32,33 @@ body {
     height: -webkit-calc(100% - 16px);
     /* Standard */
     height: calc(100% - 16px);
-}
-
-#right-half {
-    height: 100%;
-    /* grid has margin 8px, which is not subtracked by
-    box-sizing, so we subtract it manually */
-    /* Firefox */
-    height: -moz-calc(100% - 16px);
-    /* WebKit */
-    height: -webkit-calc(100% - 16px);
-    /* Standard */
-    height: calc(100% - 16px);
-}
-
-#editor{
-    height: 100%;
-}
-
-#scroll-tab-1{
-    overflow-y: auto;
-    height: 100%;
 }
 
 #lesson {
-    height: 90%;
-    overflow-y: auto;
-   position: relative;
-   z-index: 1;
-}
-
-.buttonset {
-   position: relative;
-   z-index: 2;
-   float: right;
-   margin-right: 10px;
-}
-
-
-#scroll-tab-3, #scroll-tab-2 {
     height: 100%;
+    overflow-y: auto;
+    position: relative;
+    z-index: 1;
+}
+
+.navigationButton {
+    position: relative;
+    z-index: 2;
+    float: right;
+    margin-right: 10px;
+    margin-bottom: 0px;
+    vertical-align: bottom;
 }
 
 #M2Out, #M2In {
-    height: 100%;
     width: 100%;
+    height: 100%;
     z-index: 1;
-    position: relative;
     resize: none;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    font-family: monospace;
+    font-family: "Roboto Mono";
 }
 
 .close-icon {
@@ -97,92 +69,138 @@ body {
 }
 
 #sendBtn {
-   position: relative;
-   z-index: 2;
-   float: right;
-   margin-top: 8px;
-   margin-right: 24px;
+    position: absolute;
+    z-index: 2;
+    top: 8px;
+    right: 24px;
 }
 
 #saveDialog {
-   width: 300px;
+    width: 300px;
 }
 
-#saveDialogClose{
-   float: right;
+#saveDialogClose {
+    float: right;
 }
 
 #fullScreenOutput {
-   width: 100%;
-   height: 100%;
+    width: 100%;
+    height: 100%;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
-#maximizeOutput, #downsizeOutput{
-   float: right;
-   z-index: 2;
-   position: relative;
+
+#M2OutZoomBtns {
+    z-index: 2;
+    position: absolute;
+    top: 16px;
+    right: 40px;
+}
+
+#maximizeOutput, #downsizeOutput {
+    /*opacity: 0.3;*/
+    z-index: 2;
+    position: absolute;
+    top: 16px;
+    right: 16px;
 }
 
 #M2Out {
-   /* produce overlap with maximize/minimize buttons. */
-   margin-top: -24px;
+    position: relative;
 }
 
 .icon-with-action {
-   cursor: default;
+    cursor: default;
 }
 
 .image-text-wrap {
-   float: right;
-   margin: 10px;
-   border-radius: 5px;
+    float: right;
+    margin: 10px;
+    border-radius: 5px;
 }
 
-.sdbutton {
-   width: 220px;
-   color: blue;
-   float: right;
+.mdl-tabs {
+    height: 100%;
+    overflow-y: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.mdl-tabs__panel {
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    height: 100%;
+    position: relative;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#lesson {
+    overflow-y: auto;
+    position: absolute;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.saveDialogButton {
+    width: 220px;
+    color: blue;
+    float: right;
 }
 
 #M2In {
-   /* Produce overlap with evaluate button */
-   margin-top: -44px;
+    /* We need this margin, otherwise flexbox does not work correctly.*/
+    margin: 0px;
+    flex: 1;
+    display: flex;
+    position: absolute;
 }
 
+.small-image {
+    width: 20vw;
+}
+
+code, codeblock {
+    white-space: pre;
+    background-color: lightyellow;
+    margin-left: 20px;
+    cursor: pointer;
+    font-family: 'Roboto Mono';
+    box-shadow: 1px 1px 2px #000;
+    display: inline-block;
+    text-decoration: none;
+    line-height: 1.5;
+}
 
 code {
-    white-space: pre;
-    background-color: lightyellow;
     padding: 1px 3px;
-    line-height: 1.5;
-    cursor: pointer;
-    /*font-size: 140%;*/
-    margin-left: 20px;
-    font-family: monospace;
     border-radius: 5px;
-    box-shadow: 1px 1px 2px #000;
+
 }
 
-code2 {
-    white-space: pre;
-    background-color: lightyellow;
-    /*padding: 1px 3px;*/
-    box-shadow: 1px 1px 2px #000;
-    margin-left: 20px;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-    display: inline-block;
-    cursor: pointer;
-    font-family: courier new;
+codeblock {
     padding: 3px 6px;
-    text-decoration: none;
+    border-radius: 10px;
 }
 
 .mdl-mini-footer {
     padding-top: 1px;
     padding-bottom: 1px;
+}
+
+.unstyled {
+    list-style: none;
+}
+
+a.submenuItem {
+    text-decoration:none;
 }
