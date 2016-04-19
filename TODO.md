@@ -1,14 +1,26 @@
+2016-04-18
+* Transfer changes to Singular
+* Tests! Tests! Tests!
+* Multiple File upload
+* "Session thing": Having several sockets in the same session
+* Streamline basic authorisation
+* Rename vagrantfile_aws, fix aws-readme
+* Update current readme
+* Add description of node server architecture to Readme
+* Extract more code from frontend
+* Use Sass or SCSS?
+
+
 2016-04-16
-* keypress to expand/contract M2 window
-* bug: tutorials: scroll bar appears too far to the left sometimes
-* command+- changes font size in the current window.
+* ~~keypress to expand/contract M2 window~~ (button instead)
+* ~~bug: tutorials: scroll bar appears too far to the left sometimes~~ (File bug, if reappears)
+* ~~command+- changes font size in the current window.~~ (buttons instead)
 * ~~hovering over maximize/minimize button~~
-* put the About into the hamburger menu?
+* ~~put the About into the hamburger menu?~~
 * in drawer, a close button?  or bind it to Macaulay2 at top.
-* Make footer smaller, and header too, if possible.
-* upload multiple files, or even a directory
-* button colors?  think it through?
-* save menu needs better CSS
+* ~~Make footer smaller, and header too, if possible.~~
+* ~~button colors?  think it through?~~
+* ~~save menu needs better CSS~~
 * ~~dialog after upload is wrong style~~
 * ~~dialog for showing images done~~
 * ~~picture is in the wrong place on the home screen~~
@@ -22,12 +34,12 @@
 * Clean up logging concept with environments
 
 2016-03-26
-* Playing with Google's Material Design light
-* Use fetch instead of $ajax
-* Fix footer
-* Try MDL list layout instead of jquery accordion
-* delete code for tabs, i.e., trym2.navbar
-* push to AWS, so everybody can look at the new design
+* ~~Playing with Google's Material Design light~~
+* ~~Use fetch instead of $ajax~~
+* ~~Fix footer~~
+* ~~Try MDL list layout instead of jquery accordion~~
+* ~~delete code for tabs, i.e., trym2.navbar~~
+* ~~push to AWS, so everybody can look at the new design~~
 
 2016-03-29
 * Fix AWS CodeDeploy fixen, use with TravisCI
