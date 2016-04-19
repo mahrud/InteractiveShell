@@ -7,14 +7,14 @@ GLOBAL.OPTIONS = require('./default.js').getConfig({
     'M2 --print-width 100',
     CONTAINERS: '../lib/sshDockerContainers.js'
   },
-	perContainerResources: {
-	    cpuShares: 2,
-	    memory: 512
-	},
-        hostConfig: {
-            minContainerAge: 30,
-            maxContainerNumber: 20
-	},
+  perContainerResources: {
+    cpuShares: 2,
+    memory: 512
+  },
+  hostConfig: {
+    minContainerAge: 30,
+    maxContainerNumber: 20
+  },
   startInstance: {
     host: '192.168.2.42',
     username: 'm2user',
