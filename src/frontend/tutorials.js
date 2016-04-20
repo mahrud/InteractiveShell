@@ -1,4 +1,4 @@
-/* global $, MathJax */
+/* global MathJax, fetch */
 /* eslint-env browser */
 /* eslint "max-len": "off" */
 /* eslint "new-cap": "off" */
@@ -8,6 +8,7 @@ var tutorialNr = 0;
 var tutorials = [];
 var firstLoadFlag = true; // true until we show tutorial for the first time. Needed because we need to load lesson 0
 var accordion = require('./accordion')();
+var $ = require('jquery');
 
 var loadLesson = function(tutorialid, lessonid) {
   if (tutorialid >= 0 && tutorialid < tutorials.length) {
@@ -25,8 +26,6 @@ var loadLesson = function(tutorialid, lessonid) {
 };
 
 var loadLessonIfChanged = function(tutorialid, lessonid) {
-  console.log(tutorialNr + "==" + tutorialid + " or " + lessonNr + "==" +
-      lessonid);
   var changedLesson = (tutorialNr !== tutorialid || lessonNr !==
   lessonid || firstLoadFlag);
   firstLoadFlag = false;
@@ -58,7 +57,7 @@ var switchLesson = function(incr) {
   loadLessonIfChanged(tutorialNr, lessonNr + incr);
 };
 
-var populateTutorialElement = function(theHtml) {
+var enrichTutorialWithHtml = function(theHtml) {
   var theLessons = [];
   var tutorial = $("<div>").html(theHtml);
   $("div", tutorial).each(function() {
@@ -74,18 +73,34 @@ var populateTutorialElement = function(theHtml) {
   };
 };
 
-var makeTutorialsList = function(i, tutorialNames) {
-  if (i < tutorialNames.length) {
-    $.get(tutorialNames[i], function(resultHtml) {
-      tutorials[i] = populateTutorialElement(resultHtml);
-      console.log(tutorials[i].title);
-      makeTutorialsList(i + 1, tutorialNames);
-    });
-  } else {
-    accordion.makeAccordion(tutorials);
+var getTutorial = function(url) {
+  return fetch(url, {
+    credentials: 'same-origin'
+  }).then(function(response) {
+    if (response.status !== 200) {
+      throw new Error('Fetching tutorial failed: ' + url);
+    }
+    return response.text();
+  }, function(error) {
+    console.log("Error in fetch: " + error);
+    throw error;
+  });
+};
+
+var makeTutorialsList = function(tutorialNames) {
+  return Promise.all(
+      tutorialNames.map(getTutorial)
+  ).then(function(rawTutorials) {
+    return rawTutorials.map(enrichTutorialWithHtml);
+  }).then(function(data) {
+    accordion.makeAccordion(data);
+    tutorials = data;
     $(".menuTitle").on("click", {lessonIdNr: "0"}, showLesson);
     loadLessonIfChanged(tutorialNr, lessonNr);
-  }
+  }).catch(function(error) {
+    console.log("Error in makeTutorialList: " + error);
+    throw error;
+  });
 };
 
 var uploadTutorial = function() {
@@ -95,7 +110,7 @@ var uploadTutorial = function() {
   reader.readAsText(file);
   reader.onload = function(event) {
     var resultHtml = event.target.result;
-    tutorials.push(populateTutorialElement(resultHtml));
+    tutorials.push(enrichTutorialWithHtml(resultHtml));
     var lastIndex = tutorials.length - 1;
     var newTutorial = tutorials[lastIndex];
     var title = newTutorial.title; // this is an <h3>
@@ -109,9 +124,9 @@ var uploadTutorial = function() {
 module.exports = function() {
   return {
     showLesson: showLesson,
-    makeTutorialList: makeTutorialsList,
     tutorials: tutorials,
     uploadTutorial: uploadTutorial,
-    switchLesson: switchLesson
+    switchLesson: switchLesson,
+    makeTutorialsList: makeTutorialsList
   };
 };

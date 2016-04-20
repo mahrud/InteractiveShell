@@ -1,10 +1,11 @@
-/* global $, io, SocketIOFileUpload, mathProgramName, DefaultText */
+/* global io, SocketIOFileUpload, mathProgramName, DefaultText */
 /* eslint-env browser */
 
 var socket = null;
 var serverDisconnect = false;
 var dialogPolyfill = require('dialog-polyfill');
 var shell = require('./shell-emulator')();
+var $ = require('jquery');
 
 var saveInteractions = function() {
   var input = $("#M2In");
@@ -134,9 +135,9 @@ var socketOnDisconnect = function(msg) {
   $("#M2Out").trigger("onmessage", " Sorry, your session was disconnected" +
       " by the server.\n\nPlease refresh to reconnect.\n\n");
   serverDisconnect = true;
-    // Could use the following to automatically reload. Probably too invasive,
-    // might kill results.
-    // location.reload();
+  // Could use the following to automatically reload. Probably too invasive,
+  // might kill results.
+  // location.reload();
 };
 
 var wrapEmitForDisconnect = function(event, msg) {
@@ -218,7 +219,7 @@ var init = function() {
 
   var tutorialManager = require('./tutorials')();
   var fetchTutorials = require('./fetchTutorials');
-  fetchTutorials(tutorialManager.makeTutorialList);
+  fetchTutorials(tutorialManager.makeTutorialsList);
   $("#uptutorial").on('change', tutorialManager.uploadTutorial);
   $(document).on("click", ".submenuItem", tutorialManager.showLesson);
 
