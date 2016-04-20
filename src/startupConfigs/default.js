@@ -2,7 +2,7 @@
 var configuration = function(overrideOptions) {
   var options = {
     cookieName: "tryM2",
-    authentification: "none",
+    authentication: "none",
     serverConfig: {
       CONTAINERS: '../lib/LocalContainerManager.js',
       MATH_PROGRAM: "Macaulay2",
@@ -34,7 +34,7 @@ var configuration = function(overrideOptions) {
       host: '192.168.2.42',
       username: 'vagrant',
       port: '22',
-      sshKey: "/home/vagrant/InteractiveShell/separate_machines/host_key"
+      sshKey: "/home/vagrant/keys/host_key"
     }
   };
 
@@ -53,7 +53,6 @@ var configuration = function(overrideOptions) {
   };
 
   overrideDefaultOptions(overrideOptions, options);
-
   return options;
 };
 

@@ -1,4 +1,4 @@
-GLOBAL.OPTIONS = require('./default.js').getConfig({
+require('./startup.js')({
   serverConfig: {
     port: 8002,
     MATH_PROGRAM: 'Macaulay2',
@@ -19,11 +19,9 @@ GLOBAL.OPTIONS = require('./default.js').getConfig({
     host: '192.168.2.42',
     username: 'm2user',
     port: '5000',
-    sshKey: '/home/vagrant/InteractiveShell/separate_machines/docker_key',
+    sshKey: '/home/vagrant/keys/docker_key',
     containerName: '',
     lastActiveTime: 0
   }
 });
 
-var Macaulay2Server = require('../lib/index.js').mathServer();
-Macaulay2Server.listen();
