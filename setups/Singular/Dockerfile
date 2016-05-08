@@ -61,13 +61,12 @@ WORKDIR /build
 ENV LD_LIBRARY_PATH $LIBRARY_PATH:/usr/local/lib
 RUN git clone https://github.com/Singular/Sources.git singular_sources
 WORKDIR /build/singular_sources
-RUN export PATH=$PATH:/usr/local/lib; \
-    ./autogen.sh;\
+RUN ./autogen.sh;\
     ./configure CXXFLAGS=-fopenmp --enable-gfanlib --enable-polymake;\
     make -j7;\
     make install;\
     Singular -v
-RUN ldconfig
+
 
 # Userland
 WORKDIR /
@@ -89,7 +88,6 @@ RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so
 
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
-RUN echo "UseDNS no" >> /etc/ssh/sshd_config
 
 # copy open
 # COPY open /usr/bin/open
