@@ -11,5 +11,5 @@ module.exports = {
   },
   plugins: [
   ],
-  devtool: "source-map"
+  devtool: "inline-module-source-map"
 };
